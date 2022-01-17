@@ -1,6 +1,7 @@
 from MyClasses.BoardClass import *
 from MyClasses.PlayerClass import *
 from MyClasses.WallClass import *
+from random import randint
 
 if __name__ == '__main__':
     pygame.init()
@@ -9,13 +10,15 @@ if __name__ == '__main__':
     board = Board(24, 14, cell_size=50)  # поле 24х14 со стороной клетки 50пкс
     screen.fill((0, 0, 0))  # пока фон игры просто залит черным цветом
     player = Player(0, 0, board)
-    wall1 = Wall(10, 10, board)
-    wall2 = Wall(10, 11, board)
-    wall3 = Wall(10, 12, board)
+    # wall_sprites = []
+    # for _ in range(25):
+    #     x = randint(0, 23)
+    #     y = randint(0, 13)
+    #     wall = Wall(x, y, board)
+    #     wall_sprites.append(wall)
     board.sprite_group.add(player)
-    board.sprite_group.add(wall1)
-    board.sprite_group.add(wall2)
-    board.sprite_group.add(wall3)
+    # for ws in wall_sprites:
+    #     board.sprite_group.add(ws)
     board.render(screen)  # первая отрисовка поля
     # clock = pygame.time.Clock()
     running = True

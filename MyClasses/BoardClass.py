@@ -42,7 +42,7 @@ class Board:
                 x = self.indleft + w * self.cell_size
                 y = self.indtop + h * self.cell_size
                 self.render_cell(screen, x, y, '#5DA130', 0, self.board[h][w])
-                # self.render_cell(screen, x, y, '#ffff00', 1, self.board[h][w])
+                self.render_cell(screen, x, y, '#ffff00', 1, self.board[h][w])
         self.sprite_group.draw(screen)
 
     def get_cell_coords(self, mouse_pos):
