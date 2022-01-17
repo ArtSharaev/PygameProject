@@ -1,5 +1,6 @@
 from MyClasses.BoardClass import *
 from MyClasses.PlayerClass import *
+from MyClasses.WallClass import *
 
 if __name__ == '__main__':
     pygame.init()
@@ -8,7 +9,13 @@ if __name__ == '__main__':
     board = Board(24, 14, cell_size=50)  # поле 24х14 со стороной клетки 50пкс
     screen.fill((0, 0, 0))  # пока фон игры просто залит черным цветом
     player = Player(0, 0, board)
+    wall1 = Wall(10, 10, board)
+    wall2 = Wall(10, 11, board)
+    wall3 = Wall(10, 12, board)
     board.sprite_group.add(player)
+    board.sprite_group.add(wall1)
+    board.sprite_group.add(wall2)
+    board.sprite_group.add(wall3)
     board.render(screen)  # первая отрисовка поля
     # clock = pygame.time.Clock()
     running = True
