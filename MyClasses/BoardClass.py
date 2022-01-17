@@ -26,11 +26,12 @@ class Board:
         # матрица со значениями клеток поля
         self.board = [[0] * width for _ in range(height)]
         self.sprite_group = pygame.sprite.Group()
-        # self.sprites = []
+        self.wall_sprite_group = pygame.sprite.Group()
 
     def render_cell(self, screen, x, y, color, border, value):
         # функция отрисовывает клетку, вставляется в цикл в функции render
-        pygame.draw.rect(screen, color, (x, y, self.cell_size, self.cell_size), border)
+        pygame.draw.rect(screen, color, (x, y, self.cell_size, self.cell_size),
+                         border)
         if value == 1:  # игрок
             pass
 
@@ -42,18 +43,19 @@ class Board:
                 x = self.indleft + w * self.cell_size
                 y = self.indtop + h * self.cell_size
                 self.render_cell(screen, x, y, '#5DA130', 0, self.board[h][w])
-                self.render_cell(screen, x, y, '#ffff00', 1, self.board[h][w])
+                # self.render_cell(screen, x, y, '#ffff00', 1, self.board[h][w])
         self.sprite_group.draw(screen)
+        self.wall_sprite_group.draw(screen)
 
-    def get_cell_coords(self, mouse_pos):
-        # функция возвращает координаты клетки на поле
-        mouse_pos_x = mouse_pos[0]
-        mouse_pos_y = mouse_pos[1]
-        x = (mouse_pos_x - self.indleft) // self.cell_size
-        y = (mouse_pos_y - self.indtop) // self.cell_size
-        if x >= self.width or y >= self.height or y < 0 or x < 0:
-            return None
-        return x, y
+    # def get_cell_coords(self, mouse_pos):
+    #     # функция возвращает координаты клетки на поле
+    #     mouse_pos_x = mouse_pos[0]
+    #     mouse_pos_y = mouse_pos[1]
+    #     x = (mouse_pos_x - self.indleft) // self.cell_size
+    #     y = (mouse_pos_y - self.indtop) // self.cell_size
+    #     if x >= self.width or y >= self.height or y < 0 or x < 0:
+    #         return None
+    #     return x, y
 
     # def on_click(self, mouse_pos):
     #     # после клика по экрану

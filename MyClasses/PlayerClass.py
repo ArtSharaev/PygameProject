@@ -23,6 +23,13 @@ class Player(pygame.sprite.Sprite):
         self.matrix_coords = [y, x]
         self.boardclass.board[self.matrix_coords[0]][self.matrix_coords[1]] = 1
 
+    def check_collision(self):
+        # проверка того, достиг ли игрок выхода
+        if(self.boardclass.board[self.matrix_coords[0]][self.matrix_coords[1]]
+                == 2):
+            return True
+        return False
+
     def update(self, key):
         self.boardclass.board[self.matrix_coords[0]][self.matrix_coords[1]] = 0
         if key == 'up':
@@ -45,7 +52,10 @@ class Player(pygame.sprite.Sprite):
             + self.boardclass.indleft
         y = self.matrix_coords[0] * self.boardclass.cell_size\
             + self.boardclass.indtop
-        self.boardclass.board[self.matrix_coords[0]][self.matrix_coords[1]] = 1
-        self.rect.x = x
-        self.rect.y = y
-        # pprint(self.boardclass.board)
+        if not self.check_collision():
+            self.boardclass.board[self.matrix_coords[0]][
+                self.matrix_coords[1]] = 1
+            self.rect.x = x
+            self.rect.y = y
+        else:
+            print('Игрок достиг выхода!')

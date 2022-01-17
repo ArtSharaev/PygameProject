@@ -23,3 +23,12 @@ class Wall(pygame.sprite.Sprite):
         self.rect.y = y * self.boardclass.cell_size + self.boardclass.indleft
         self.matrix_coords = [y, x]
         self.boardclass.board[self.matrix_coords[0]][self.matrix_coords[1]] = 3
+
+    def check_collision(self):
+        # проверка того, врезался ли игрок в стену
+        if (self.boardclass.board[self.matrix_coords[0]][self.matrix_coords[1]]
+                == 1):
+            self.boardclass.board[self.matrix_coords[0]][self.matrix_coords[1]]\
+                = 3
+            return True
+        return False
