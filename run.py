@@ -1,6 +1,7 @@
 from MyClasses.BoardClass import *
 from MyClasses.PlayerClass import *
 from MyClasses.WallClass import *
+from MyClasses.ExitClass import *
 from random import randint, choice
 from pprint import pprint
 
@@ -17,6 +18,13 @@ if __name__ == '__main__':
     board.sprite_group.add(player)
     board.render(screen)  # первая отрисовка поля
     # clock = pygame.time.Clock()
+    x = randint(0, 23)
+    y = randint(0, 13)
+    while board.board[y][x] != 0:
+        x = randint(10, 23)
+        y = randint(0, 13)
+    exit = Exit(x, y, board)
+    board.sprite_group.add(exit)
     running = True
     was_move = False
     while running:
@@ -47,6 +55,10 @@ if __name__ == '__main__':
                             player.kill()
                             print('Игрок столкнулся со стеной!')
                             running = False
+                    if player.check_collision():
+                        player.kill()
+                        print('Переход на новый уровень!')
+                        running = False
                     if movecount % 2 == 0 and choice([0, 1, 1, 1]):
                         # каждый второй ход с вероятностью 75%
                         # появляется новая стена в случайной не занятой клетке

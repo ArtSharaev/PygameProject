@@ -31,6 +31,18 @@ class Player(pygame.sprite.Sprite):
             return True
         return False
 
+    def set_coords(self, matrix_coords):
+        self.matrix_coords = matrix_coords
+        self.boardclass.board[self.matrix_coords[0]][
+            self.matrix_coords[1]] = 1
+        x = self.matrix_coords[1] * self.boardclass.cell_size\
+            + self.boardclass.indleft
+        y = self.matrix_coords[0] * self.boardclass.cell_size\
+            + self.boardclass.indtop
+        self.rect.x = x
+        self.rect.y = y
+
+
     def update(self, key):
         self.boardclass.board[self.matrix_coords[0]][self.matrix_coords[1]] = 0
         if key == 'up':
@@ -44,7 +56,7 @@ class Player(pygame.sprite.Sprite):
         elif key == 'left':
             self.matrix_coords[1] -= 1
             if self.matrix_coords[1] < 0:
-                self.matrix_coords[1] = self.boardclass.height - 1
+                self.matrix_coords[1] = self.boardclass.width - 1
             self.image = Player.image_left
         elif key == 'right':
             self.matrix_coords[1] += 1
