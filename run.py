@@ -39,12 +39,17 @@ if __name__ == '__main__':
                     player.update('right')
                     was_move = True
                 if was_move:
-                    movecount += 1
+                    movecount += 1  # счетчик ходов
                     # pprint(board.board)
                     for ws in board.wall_sprite_group:
+                        # проверка столкновения с одной из стен
                         if ws.check_collision():
+                            player.kill()
                             print('Игрок столкнулся со стеной!')
+                            running = False
                     if movecount % 2 == 0 and choice([0, 1, 1, 1]):
+                        # каждый второй ход с вероятностью 75%
+                        # появляется новая стена в случайной не занятой клетке
                         x = randint(0, 23)
                         y = randint(0, 13)
                         while board.board[y][x] != 0:
@@ -52,7 +57,7 @@ if __name__ == '__main__':
                             y = randint(0, 13)
                         wall = Wall(x, y, board)
                         board.wall_sprite_group.add(wall)
-                    board.render(screen)
+                    board.render(screen)  # новая отрисовка поля
                     was_move = False
 
 

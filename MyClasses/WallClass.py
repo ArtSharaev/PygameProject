@@ -11,13 +11,14 @@ import pygame
 
 
 class Wall(pygame.sprite.Sprite):
-    image = pygame.image.load('Sprites/wall.png')
+    general_image = pygame.image.load('Sprites/wall.png')
+    crash_image = pygame.image.load('Sprites/crash.png')
 
     def __init__(self, x, y, boardclass, *group):
         super().__init__(*group)
         self.matrix_coords = [x, y]
         self.boardclass = boardclass
-        self.image = Wall.image
+        self.image = Wall.general_image
         self.rect = self.image.get_rect()
         self.rect.x = x * self.boardclass.cell_size + self.boardclass.indleft
         self.rect.y = y * self.boardclass.cell_size + self.boardclass.indleft
@@ -30,5 +31,6 @@ class Wall(pygame.sprite.Sprite):
                 == 1):
             self.boardclass.board[self.matrix_coords[0]][self.matrix_coords[1]]\
                 = 3
+            self.image = Wall.crash_image
             return True
         return False

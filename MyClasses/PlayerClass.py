@@ -10,13 +10,14 @@ from pprint import *
 
 
 class Player(pygame.sprite.Sprite):
-    image = pygame.image.load('Sprites/player.png')
+    image_right = pygame.image.load('Sprites/right_player.png')
+    image_left = pygame.image.load('Sprites/left_player.png')
 
     def __init__(self, x, y, boardclass, *group):
         super().__init__(*group)
         self.matrix_coords = [x, y]
         self.boardclass = boardclass
-        self.image = Player.image
+        self.image = Player.image_right
         self.rect = self.image.get_rect()
         self.rect.x = x * self.boardclass.cell_size + self.boardclass.indleft
         self.rect.y = y * self.boardclass.cell_size + self.boardclass.indleft
@@ -44,10 +45,12 @@ class Player(pygame.sprite.Sprite):
             self.matrix_coords[1] -= 1
             if self.matrix_coords[1] < 0:
                 self.matrix_coords[1] = self.boardclass.height - 1
+            self.image = Player.image_left
         elif key == 'right':
             self.matrix_coords[1] += 1
             if self.matrix_coords[1] >= self.boardclass.width:
                 self.matrix_coords[1] = 0
+            self.image = Player.image_right
         x = self.matrix_coords[1] * self.boardclass.cell_size\
             + self.boardclass.indleft
         y = self.matrix_coords[0] * self.boardclass.cell_size\
