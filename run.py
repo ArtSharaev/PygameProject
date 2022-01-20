@@ -18,7 +18,7 @@ if __name__ == '__main__':
     board.sprite_group.add(player)
     board.render(screen)  # первая отрисовка поля
     # clock = pygame.time.Clock()
-    x = randint(0, 23)
+    x = randint(10, 23)
     y = randint(0, 13)
     while board.board[y][x] != 0:
         x = randint(10, 23)
