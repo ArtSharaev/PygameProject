@@ -2,6 +2,7 @@ from MyClasses.BoardClass import *
 from MyClasses.PlayerClass import *
 from MyClasses.WallClass import *
 from MyClasses.ExitClass import *
+# from MyClasses.HunterClass import *
 from random import randint, choice
 from pprint import pprint
 
@@ -13,11 +14,11 @@ if __name__ == '__main__':
     board = Board(24, 14, cell_size=50)  # поле 24х14 со стороной клетки 50пкс
     screen.fill((0, 0, 0))  # пока фон игры просто залит черным цветом
     player = Player(0, 0, board)
-    wall = Wall(10, 10, board)
+    wall = Wall(9, 9, 10, 10, board)
     board.wall_sprite_group.add(wall)
     board.sprite_group.add(player)
     board.render(screen)  # первая отрисовка поля
-    # clock = pygame.time.Clock()
+    clock = pygame.time.Clock()
     x = randint(10, 23)
     y = randint(0, 13)
     while board.board[y][x] != 0:
@@ -28,6 +29,8 @@ if __name__ == '__main__':
     running = True
     was_move = False
     while running:
+        for ws in board.wall_sprite_group:
+            ws.update()
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
@@ -52,13 +55,13 @@ if __name__ == '__main__':
                     for ws in board.wall_sprite_group:
                         # проверка столкновения с одной из стен
                         if ws.check_collision():
-                            player.kill()
+                            # player.kill()
                             print('Игрок столкнулся со стеной!')
-                            running = False
+                            # running = False
                     if player.check_collision():
                         player.kill()
                         print('Переход на новый уровень!')
-                        running = False
+                        # running = False
                     if movecount % 2 == 0 and choice([0, 1, 1, 1]):
                         # каждый второй ход с вероятностью 75%
                         # появляется новая стена в случайной не занятой клетке
@@ -67,7 +70,7 @@ if __name__ == '__main__':
                         while board.board[y][x] != 0:
                             x = randint(0, 23)
                             y = randint(0, 13)
-                        wall = Wall(x, y, board)
+                        wall = Wall(9, 9, x, y, board)
                         board.wall_sprite_group.add(wall)
                     board.render(screen)  # новая отрисовка поля
                     was_move = False
@@ -85,6 +88,6 @@ if __name__ == '__main__':
         #     player.update('right')
         # if keys[pygame.K_LEFT]:
         #     player.update('left')
-        # clock.tick(15)
+        clock.tick(50)
         board.render(screen)
         pygame.display.flip()
