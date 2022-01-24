@@ -1,7 +1,7 @@
 """
 Класс объекта - выхода, столкнувшись с которым,
 игрок переходит на следующий уровень.
-На матрице доски стена обозначается цифрой 2
+На матрице доски выход обозначается цифрой 2
 """
 
 import pygame
@@ -12,7 +12,6 @@ class Exit(pygame.sprite.Sprite):
 
     def __init__(self, x, y, boardclass, *group):
         super().__init__(*group)
-        self.matrix_coords = [x, y]
         self.boardclass = boardclass
         self.image = Exit.image
         self.rect = self.image.get_rect()

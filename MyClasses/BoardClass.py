@@ -27,6 +27,7 @@ class Board:
         self.board = [[0] * width for _ in range(height)]
         self.sprite_group = pygame.sprite.Group()
         self.wall_sprite_group = pygame.sprite.Group()
+        self.hunter_sprite_group = pygame.sprite.Group()
 
     def render_cell(self, screen, x, y, color, border, value):
         # функция отрисовывает клетку, вставляется в цикл в функции render
@@ -46,6 +47,7 @@ class Board:
                 # self.render_cell(screen, x, y, '#ffff00', 1, self.board[h][w])
         self.sprite_group.draw(screen)
         self.wall_sprite_group.draw(screen)
+        self.hunter_sprite_group.draw(screen)
 
     # def get_cell_coords(self, mouse_pos):
     #     # функция возвращает координаты клетки на поле

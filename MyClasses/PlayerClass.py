@@ -15,7 +15,6 @@ class Player(pygame.sprite.Sprite):
 
     def __init__(self, x, y, boardclass, *group):
         super().__init__(*group)
-        self.matrix_coords = [x, y]
         self.boardclass = boardclass
         self.image = Player.image_right
         self.rect = self.image.get_rect()
@@ -41,7 +40,6 @@ class Player(pygame.sprite.Sprite):
             + self.boardclass.indtop
         self.rect.x = x
         self.rect.y = y
-
 
     def update(self, key):
         self.boardclass.board[self.matrix_coords[0]][self.matrix_coords[1]] = 0

@@ -16,12 +16,11 @@ class Wall(pygame.sprite.Sprite):
 
     def __init__(self, columns, rows, x, y, boardclass, *group):
         super().__init__(*group)
-        self.matrix_coords = [x, y]
         self.boardclass = boardclass
-        self.image = Wall.general_image
         self.frames = []
         self.cut_sheet(Wall.crash_image, columns, rows)
         self.cur_frame = 0
+        self.image = Wall.general_image
         self.rect = self.image.get_rect()
         self.rect.x = x * self.boardclass.cell_size + self.boardclass.indleft
         self.rect.y = y * self.boardclass.cell_size + self.boardclass.indleft
@@ -34,7 +33,8 @@ class Wall(pygame.sprite.Sprite):
                 == 1):
             self.boardclass.board[self.matrix_coords[0]][self.matrix_coords[1]]\
                 = 3
-            self.cur_frame = 1
+            if self.cur_frame == 0:
+                self.cur_frame = 1
             return True
         return False
 
@@ -45,9 +45,9 @@ class Wall(pygame.sprite.Sprite):
         for j in range(rows):
             for i in range(columns):
                 if j < rows - 1:
-                    frame_location = ((self.rect.w) * i, (self.rect.h + 2) * j)
+                    frame_location = (self.rect.w * i, (self.rect.h + 2) * j)
                 else:
-                    frame_location = ((self.rect.w) * i, (self.rect.h) * j)
+                    frame_location = (self.rect.w * i, self.rect.h * j)
                 self.frames.append(sheet.subsurface(pygame.Rect(
                     frame_location, self.rect.size)))
 
