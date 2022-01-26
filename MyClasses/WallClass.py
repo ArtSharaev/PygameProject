@@ -29,13 +29,15 @@ class Wall(pygame.sprite.Sprite):
 
     def check_collision(self):
         # проверка того, врезался ли игрок в стену
-        if (self.boardclass.board[self.matrix_coords[0]][self.matrix_coords[1]]
-                == 1):
-            self.boardclass.board[self.matrix_coords[0]][self.matrix_coords[1]]\
-                = 3
+        if (self.boardclass.board[self.matrix_coords[0]][
+            self.matrix_coords[1]] == 1 or
+                self.boardclass.board[self.matrix_coords[0]][
+                    self.matrix_coords[1]] == 5):
+            self.boardclass.board[self.matrix_coords[0]][
+                self.matrix_coords[1]] = 3
             if self.cur_frame == 0:
                 self.cur_frame = 1
-            return True
+                return True
         return False
 
     def cut_sheet(self, sheet, columns, rows):
@@ -58,4 +60,6 @@ class Wall(pygame.sprite.Sprite):
             self.cur_frame = (self.cur_frame + 1) % len(self.frames)
             self.image = self.frames[self.cur_frame - 1]
             if self.cur_frame == 80:
+                self.boardclass.board[self.matrix_coords[0]][
+                    self.matrix_coords[1]] = 0
                 self.kill()

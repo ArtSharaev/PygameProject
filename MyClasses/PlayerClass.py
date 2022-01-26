@@ -70,5 +70,3 @@ class Player(pygame.sprite.Sprite):
                 self.matrix_coords[1]] = 1
             self.rect.x = x
             self.rect.y = y
-        else:
-            print('Игрок достиг выхода!')

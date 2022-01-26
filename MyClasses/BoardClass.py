@@ -48,19 +48,3 @@ class Board:
         self.sprite_group.draw(screen)
         self.wall_sprite_group.draw(screen)
         self.hunter_sprite_group.draw(screen)
-
-    # def get_cell_coords(self, mouse_pos):
-    #     # функция возвращает координаты клетки на поле
-    #     mouse_pos_x = mouse_pos[0]
-    #     mouse_pos_y = mouse_pos[1]
-    #     x = (mouse_pos_x - self.indleft) // self.cell_size
-    #     y = (mouse_pos_y - self.indtop) // self.cell_size
-    #     if x >= self.width or y >= self.height or y < 0 or x < 0:
-    #         return None
-    #     return x, y
-
-    # def on_click(self, mouse_pos):
-    #     # после клика по экрану
-    #     cell_coords = self.get_cell_coords(mouse_pos)
-    #     if cell_coords:
-    #         self.change_cell_value(cell_coords, 4)
