@@ -11,9 +11,10 @@ level = 1
 
 
 def start_new_level(level):
-    global movecount, board, screen, clock, player
+    global movecount, board, screen, clock, player, crash_waiting
     pygame.init()
     movecount = 0
+    crash_waiting = False
     screen = pygame.display.set_mode(SIZE)
     board = Board(24, 14, cell_size=50)  # поле 24х14 со стороной клетки 50пкс
     screen.fill((0, 0, 0))  # пока фон игры просто залит черным цветом
@@ -21,7 +22,6 @@ def start_new_level(level):
     board.sprite_group.add(player)
     wall = Wall(9, 9, 10, 10, board)
     board.wall_sprite_group.add(wall)
-    print(level)
     for _ in range(level):
         x = randint(0, 23)
         y = randint(0, 13)
@@ -58,64 +58,75 @@ if __name__ == '__main__':
     #                      \___)=(___/
     running = True
     was_move = False
+
     while running:
         for hs in board.hunter_sprite_group:
-            hs.update(player.matrix_coords, was_move)
+            if hs.update(player.matrix_coords, was_move):
+                start_new_level(level)
         for ws in board.wall_sprite_group:
-            ws.update()
-        for event in pygame.event.get():
-            if event.type == pygame.QUIT:
-                running = False
-            if event.type == pygame.KEYDOWN:
-                if event.key == pygame.K_UP or event.key == pygame.K_w:
-                    player.update('up')
-                    was_move = True
-                if event.key == pygame.K_DOWN or event.key == pygame.K_s:
-                    player.update('down')
-                    was_move = True
-                if event.key == pygame.K_LEFT or event.key == pygame.K_a:
-                    player.update('left')
-                    was_move = True
-                if event.key == pygame.K_RIGHT or event.key == pygame.K_d:
-                    player.update('right')
-                    was_move = True
-                if was_move:
-                    movecount += 1  # счетчик ходов
-                    if player.check_collision():  # переход на новый уровень
-                        level += 1
-                        start_new_level(level)
-                    for hs in board.hunter_sprite_group:
-                        # проверка столкновения с одним из охотников
-                        hs.update(player.matrix_coords, was_move)
-                    for wallsprite in board.wall_sprite_group:
-                        # проверка столкновения с одной из стен
-                        if wallsprite.check_collision():
-                            while level % 5 != 0 and level != 1:
-                                level -= 1
+            if ws.update():
+                start_new_level(level)
+        if not crash_waiting:
+            for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                    running = False
+                if event.type == pygame.KEYDOWN:
+                    if event.key == pygame.K_UP or event.key == pygame.K_w:
+                        player.update('up')
+                        was_move = True
+                    if event.key == pygame.K_DOWN or event.key == pygame.K_s:
+                        player.update('down')
+                        was_move = True
+                    if event.key == pygame.K_LEFT or event.key == pygame.K_a:
+                        player.update('left')
+                        was_move = True
+                    if event.key == pygame.K_RIGHT or event.key == pygame.K_d:
+                        player.update('right')
+                        was_move = True
+                    if was_move:
+                        movecount += 1  # счетчик ходов
+                        if player.check_collision():  # переход на новый уровень
+                            level += 1
                             start_new_level(level)
-                    if movecount % 2 == 0 and choice([0, 1, 1, 1]):
-                        # каждый второй ход с вероятностью 75%
-                        # появляется новая стена в случайной не занятой клетке
-                        x = randint(0, 23)
-                        y = randint(0, 13)
-                        while board.board[y][x] != 0:
+                        for hs in board.hunter_sprite_group:
+                            # проверка столкновения с одним из охотников
+                            if hs.update(player.matrix_coords, was_move) == 1:
+                                while level % 5 != 0 and level != 1:
+                                    level -= 1
+                                player.kill()
+                                crash_waiting = True
+                        for wallsprite in board.wall_sprite_group:
+                            # проверка столкновения с одной из стен
+                            if wallsprite.check_collision():
+                                while level % 5 != 0 and level != 1:
+                                    level -= 1
+                                player.kill()
+                                crash_waiting = True
+                        if movecount % 2 == 0 and choice([0, 1, 1, 1]):
+                            # каждый второй ход с вероятностью 75%
+                            # появляется новая стена
+                            # в случайной не занятой клетке
                             x = randint(0, 23)
                             y = randint(0, 13)
-                        wall = Wall(9, 9, x, y, board)
-                        board.wall_sprite_group.add(wall)
-                    if movecount % 3 == 0 and choice([0, 0, 0, 1]):
-                        # каждый третий ход с вероятностью 25%
-                        # появляется новый охотник в случайной не занятой клетке
-                        x = randint(0, 23)
-                        y = randint(0, 13)
-                        while board.board[y][x] != 0:
+                            while board.board[y][x] != 0:
+                                x = randint(0, 23)
+                                y = randint(0, 13)
+                            wall = Wall(9, 9, x, y, board)
+                            board.wall_sprite_group.add(wall)
+                        if movecount % 3 == 0 and choice([0, 0, 0, 1]):
+                            # каждый третий ход с вероятностью 25%
+                            # появляется новый охотник
+                            # в случайной не занятой клетке
                             x = randint(0, 23)
                             y = randint(0, 13)
-                        hunter = Hunter(9, 9, x, y, board)
-                        board.hunter_sprite_group.add(hunter)
-                    pprint(board.board)
-                    board.render(screen)  # новая отрисовка поля
-                    was_move = False
-        clock.tick(50)
+                            while board.board[y][x] != 0:
+                                x = randint(0, 23)
+                                y = randint(0, 13)
+                            hunter = Hunter(9, 9, x, y, board)
+                            board.hunter_sprite_group.add(hunter)
+                        pprint(board.board)
+                        board.render(screen)  # новая отрисовка поля
+                        was_move = False
+        clock.tick(70)
         board.render(screen)
         pygame.display.flip()

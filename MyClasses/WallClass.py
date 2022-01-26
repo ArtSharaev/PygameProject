@@ -63,3 +63,4 @@ class Wall(pygame.sprite.Sprite):
                 self.boardclass.board[self.matrix_coords[0]][
                     self.matrix_coords[1]] = 0
                 self.kill()
+                return True

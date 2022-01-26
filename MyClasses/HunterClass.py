@@ -57,6 +57,7 @@ class Hunter(pygame.sprite.Sprite):
             if self.check_collision(player_matrix_coords):
                 self.cur_frame = 2
                 self.notcollision = False
+                return 1
             if was_move:
                 if self.notcollision:
                     px = player_matrix_coords[1]
@@ -88,6 +89,7 @@ class Hunter(pygame.sprite.Sprite):
                     if self.check_collision(player_matrix_coords):
                         self.cur_frame = 2
                         self.notcollision = False
+                        return 1
         if self.cur_frame == 0:
             self.image = Hunter.image_left
         elif self.cur_frame == 1:
@@ -97,3 +99,4 @@ class Hunter(pygame.sprite.Sprite):
             self.image = self.frames[self.cur_frame]
             if self.cur_frame == 81:
                 self.kill()
+                return True
