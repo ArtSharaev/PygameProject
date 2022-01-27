@@ -13,11 +13,12 @@ level = 1
 def start_new_level(level):
     global movecount, board, screen, clock, player, crash_waiting
     pygame.init()
+    pygame.display.set_caption('Уровень ' + str(level))
     movecount = 0
     crash_waiting = False
     screen = pygame.display.set_mode(SIZE)
     board = Board(24, 14, cell_size=50)  # поле 24х14 со стороной клетки 50пкс
-    screen.fill((0, 0, 0))  # пока фон игры просто залит черным цветом
+    # screen.fill((0, 0, 0))  # пока фон игры просто залит черным цветом
     player = Player(0, 0, board)
     board.sprite_group.add(player)
     wall = Wall(9, 9, 10, 10, board)
@@ -37,6 +38,12 @@ def start_new_level(level):
         y = randint(0, 13)
     exit = Exit(x, y, board)
     board.sprite_group.add(exit)
+    if level == 5:
+        screen.fill((255, 0, 0))
+    elif level == 10:
+        screen.fill((0, 255, 0))
+    elif level == 15:
+        screen.fill((0, 0, 255))
     clock = pygame.time.Clock()
     board.render(screen)  # первая отрисовка поля
 
@@ -61,10 +68,10 @@ if __name__ == '__main__':
 
     while running:
         for hs in board.hunter_sprite_group:
-            if hs.update(player.matrix_coords, was_move):
+            if hs.cur_frame == 81 and hs.collided == 'player':
                 start_new_level(level)
         for ws in board.wall_sprite_group:
-            if ws.update():
+            if ws.update() == 1:
                 start_new_level(level)
         if not crash_waiting:
             for event in pygame.event.get():
@@ -88,19 +95,27 @@ if __name__ == '__main__':
                         if player.check_collision():  # переход на новый уровень
                             level += 1
                             start_new_level(level)
-                        for hs in board.hunter_sprite_group:
-                            # проверка столкновения с одним из охотников
-                            if hs.update(player.matrix_coords, was_move) == 1:
+                        for wallsprite in board.wall_sprite_group:
+                            # проверка столкновения с одной из стен
+                            if wallsprite.check_collision() == 1:
                                 while level % 5 != 0 and level != 1:
                                     level -= 1
                                 player.kill()
                                 crash_waiting = True
-                        for wallsprite in board.wall_sprite_group:
-                            # проверка столкновения с одной из стен
-                            if wallsprite.check_collision():
+                            elif wallsprite.check_collision() == 2:
+                                pass
+                        for huntersprite in board.hunter_sprite_group:
+                            # проверка столкновения игрока с одним из охотников
+                            huntersprite.update(player.matrix_coords, was_move)
+                            if huntersprite.check_collision(player.matrix_coords) == 'player':
                                 while level % 5 != 0 and level != 1:
                                     level -= 1
                                 player.kill()
+                                crash_waiting = True
+                            elif huntersprite.check_collision(player.matrix_coords) == 'wall':
+                                crash_waiting = True
+                            elif hs.update(player.matrix_coords,
+                                           was_move) == 'wall':
                                 crash_waiting = True
                         if movecount % 2 == 0 and choice([0, 1, 1, 1]):
                             # каждый второй ход с вероятностью 75%
@@ -124,7 +139,6 @@ if __name__ == '__main__':
                                 y = randint(0, 13)
                             hunter = Hunter(9, 9, x, y, board)
                             board.hunter_sprite_group.add(hunter)
-                        pprint(board.board)
                         board.render(screen)  # новая отрисовка поля
                         was_move = False
         clock.tick(70)

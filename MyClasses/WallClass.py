@@ -29,15 +29,19 @@ class Wall(pygame.sprite.Sprite):
 
     def check_collision(self):
         # проверка того, врезался ли игрок в стену
-        if (self.boardclass.board[self.matrix_coords[0]][
-            self.matrix_coords[1]] == 1 or
-                self.boardclass.board[self.matrix_coords[0]][
-                    self.matrix_coords[1]] == 5):
+        if self.boardclass.board[self.matrix_coords[0]][self.matrix_coords[1]] == 1:
             self.boardclass.board[self.matrix_coords[0]][
                 self.matrix_coords[1]] = 3
             if self.cur_frame == 0:
                 self.cur_frame = 1
-                return True
+                return 1
+        elif self.boardclass.board[self.matrix_coords[0]][
+            self.matrix_coords[1]] == 5:
+            self.boardclass.board[self.matrix_coords[0]][
+                self.matrix_coords[1]] = 3
+            if self.cur_frame == 0:
+                self.cur_frame = 1
+                return 2
         return False
 
     def cut_sheet(self, sheet, columns, rows):
