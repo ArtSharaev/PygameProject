@@ -6,20 +6,67 @@ from MyClasses.HunterClass import *
 from random import randint, choice
 from pprint import pprint
 
-SIZE = 1220, 720
+SIZE = 1220, 750
 level = 1
-FPS = 120
+FPS = 60
+BEST_RESULT_FILE = 'data_files/best_result.txt'
+cell_color = (93, 161, 48)
+
+
+def set_best_result(file, value):
+    with open(file, 'w', encoding='utf-8') as text:
+        text.write(str(value))
+
+
+def get_best_result(file):
+    with open(file, encoding='utf-8') as text:
+        return text.readline()
+
+
+def change_color(r, g, b):
+        if board.cell_color[0] < r:
+            board.set_cell_color(screen, (board.cell_color[0] + 1,
+                                          board.cell_color[1],
+                                          board.cell_color[2]))
+        elif board.cell_color[0] > r:
+            board.set_cell_color(screen, (board.cell_color[0] - 1,
+                                          board.cell_color[1],
+                                          board.cell_color[2]))
+        if board.cell_color[1] < g:
+            board.set_cell_color(screen, (board.cell_color[0],
+                                          board.cell_color[1] + 1,
+                                          board.cell_color[2]))
+        elif board.cell_color[1] > g:
+            board.set_cell_color(screen, (board.cell_color[0],
+                                          board.cell_color[1] - 1,
+                                          board.cell_color[2]))
+        if board.cell_color[2] < b:
+            board.set_cell_color(screen, (board.cell_color[0],
+                                          board.cell_color[1],
+                                          board.cell_color[2] + 1))
+        elif board.cell_color[2] > b:
+            board.set_cell_color(screen, (board.cell_color[0],
+                                          board.cell_color[1],
+                                          board.cell_color[2] - 1))
 
 
 def start_new_level(level):
     global movecount, board, screen, clock, player, crash_waiting
     pygame.init()
-    pygame.display.set_caption('Уровень ' + str(level))
+    pygame.display.set_caption('PygameProject')
     movecount = 0
     crash_waiting = False
+    if level > int(get_best_result(BEST_RESULT_FILE)):
+        set_best_result(BEST_RESULT_FILE, level)
     screen = pygame.display.set_mode(SIZE)
-    board = Board(24, 14, cell_size=50)  # поле 24х14 со стороной клетки 50пкс
-    # screen.fill((0, 0, 0))  # пока фон игры просто залит черным цветом
+    font = pygame.font.Font(None, 30)
+    level_text = font.render('Уровень - ' + str(level), True, (200, 200, 200))
+    best_result_text = font.render('Рекорд - ' +
+                                   get_best_result(BEST_RESULT_FILE),
+                                   True, (200, 200, 200))
+    screen.blit(level_text, (450, 720))
+    screen.blit(best_result_text, (650, 720))
+    board = Board(24, 14, cell_color=cell_color, cell_size=50)
     player = Player(0, 0, board)
     board.sprite_group.add(player)
     wall = Wall(9, 9, 10, 10, board)
@@ -39,12 +86,6 @@ def start_new_level(level):
         y = randint(0, 13)
     exit = Exit(x, y, board)
     board.sprite_group.add(exit)
-    if level >= 5:
-        screen.fill((255, 0, 0))
-    elif level >= 10:
-        screen.fill((0, 255, 0))
-    elif level >= 15:
-        screen.fill((0, 0, 255))
     clock = pygame.time.Clock()
     board.render(screen)  # первая отрисовка поля
 
@@ -55,6 +96,51 @@ if __name__ == '__main__':
     was_move = False
 
     while running:
+        if level == 1:
+            change_color(93, 161, 48)
+            cell_color = (93, 161, 48)
+        elif level == 2:
+            change_color(158, 178, 93)
+            cell_color = (158, 178, 93)
+        elif level == 3:
+            change_color(187, 10, 33)
+            cell_color = (187, 10, 33)
+        elif level == 4:
+            change_color(237, 255, 113)
+            cell_color = (237, 255, 113)
+        elif level == 5:
+            change_color(241, 219, 75)
+            cell_color = (241, 219, 75)
+        elif level == 6:
+            change_color(75, 136, 162)
+            cell_color = (75, 136, 162)
+        elif level == 7:
+            change_color(167, 198, 218)
+            cell_color = (167, 198, 218)
+        elif level == 8:
+            change_color(241, 153, 83)
+            cell_color = (241, 153, 83)
+        elif level == 9:
+            change_color(86, 53, 30)
+            cell_color = (86, 53, 30)
+        elif level == 10:
+            change_color(196, 115, 53)
+            cell_color = (196, 115, 53)
+        elif level == 11:
+            change_color(38, 96, 164)
+            cell_color = (38, 96, 164)
+        elif level == 12:
+            change_color(171, 155, 150)
+            cell_color = (171, 155, 150)
+        elif level == 13:
+            change_color(196, 110, 110)
+            cell_color = (196, 110, 110)
+        elif level == 14:
+            change_color(166, 58, 80)
+            cell_color = (166, 58, 80)
+        elif level == 15:
+            change_color(37, 38, 39)
+            cell_color = (37, 38, 39)
         for hs in board.hunter_sprite_group:
             hs.update(player.matrix_coords, False)
             if hs.cur_frame == 81 and hs.collided == 'player':
@@ -136,8 +222,7 @@ if __name__ == '__main__':
                             hunter = Hunter(9, 9, x, y, board)
                             board.hunter_sprite_group.add(hunter)
                         pprint(board.board)
-                        board.render(screen)  # новая отрисовка поля
                         was_move = False
         clock.tick(FPS)
-        board.render(screen)
+        board.render(screen)  # новая отрисовка поля
         pygame.display.flip()

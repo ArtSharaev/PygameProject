@@ -15,11 +15,12 @@ import pygame
 
 class Board:
     """Класс игровой доски - поля"""
-    def __init__(self, width, height, cell_size=75, indleft=10, indtop=10):
+    def __init__(self, width, height, cell_color='#5DA130', cell_size=75, indleft=10, indtop=10):
         # ширина и и высота в пкс
         self.width = width
         self.height = height
         self.cell_size = cell_size
+        self.cell_color = cell_color
         # отступы игрового поля от самого экрана
         self.indleft = indleft
         self.indtop = indtop
@@ -36,6 +37,10 @@ class Board:
         if value == 1:  # игрок
             pass
 
+    def set_cell_color(self, screen, color):
+        self.cell_color = color
+        self.render(screen)
+
     def render(self, screen):
         # функция заново отрисовывает все окно
         for h in range(self.height):
@@ -43,7 +48,8 @@ class Board:
                 # координаты клетки в пкс
                 x = self.indleft + w * self.cell_size
                 y = self.indtop + h * self.cell_size
-                self.render_cell(screen, x, y, '#5DA130', 0, self.board[h][w])
+                self.render_cell(screen, x, y, self.cell_color, 0,
+                                 self.board[h][w])
                 # self.render_cell(screen, x, y, '#ffff00', 1, self.board[h][w])
         self.sprite_group.draw(screen)
         self.wall_sprite_group.draw(screen)
