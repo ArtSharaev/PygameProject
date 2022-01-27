@@ -26,23 +26,7 @@ class Wall(pygame.sprite.Sprite):
         self.rect.y = y * self.boardclass.cell_size + self.boardclass.indleft
         self.matrix_coords = [y, x]
         self.boardclass.board[self.matrix_coords[0]][self.matrix_coords[1]] = 3
-
-    def check_collision(self):
-        # проверка того, врезался ли игрок в стену
-        if self.boardclass.board[self.matrix_coords[0]][self.matrix_coords[1]] == 1:
-            self.boardclass.board[self.matrix_coords[0]][
-                self.matrix_coords[1]] = 3
-            if self.cur_frame == 0:
-                self.cur_frame = 1
-                return 1
-        elif self.boardclass.board[self.matrix_coords[0]][
-            self.matrix_coords[1]] == 5:
-            self.boardclass.board[self.matrix_coords[0]][
-                self.matrix_coords[1]] = 3
-            if self.cur_frame == 0:
-                self.cur_frame = 1
-                return 2
-        return False
+        self.collided = None
 
     def cut_sheet(self, sheet, columns, rows):
         """Функция для обрезки листа с кадрами"""
@@ -57,6 +41,20 @@ class Wall(pygame.sprite.Sprite):
                 self.frames.append(sheet.subsurface(pygame.Rect(
                     frame_location, self.rect.size)))
 
+    def check_collision(self):
+        # проверка того, врезался ли игрок в стену
+        if self.boardclass.board[self.matrix_coords[0]][
+                self.matrix_coords[1]] == 1:
+            self.cur_frame = 1
+            self.collided = 'player'
+            return 'player'
+        elif self.boardclass.board[self.matrix_coords[0]][
+                self.matrix_coords[1]] == 5:
+            self.cur_frame = 1
+            self.collided = 'hunter'
+            return 'hunter'
+        return False
+
     def update(self):
         if self.cur_frame == 0:  # когда стоит спрайт стены
             pass
@@ -67,4 +65,3 @@ class Wall(pygame.sprite.Sprite):
                 self.boardclass.board[self.matrix_coords[0]][
                     self.matrix_coords[1]] = 0
                 self.kill()
-                return True

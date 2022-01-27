@@ -43,21 +43,15 @@ class Hunter(pygame.sprite.Sprite):
                 self.frames.append(sheet.subsurface(pygame.Rect(
                     frame_location, self.rect.size)))
 
-    def check_collision(self, player_matrix_coords):
+    def check_collision(self):
         # проверка того, догнал ли охотник игрока
-        px = player_matrix_coords[1]
-        py = player_matrix_coords[0]
-        if px == self.matrix_coords[1] and py == self.matrix_coords[0]:
+        if (self.prev_object == 1 or
+                self.boardclass.board[self.matrix_coords[0]][
+                    self.matrix_coords[1]] == 1):
             self.collided = 'player'
             self.notcollision = False
             self.cur_frame = 2
             return 'player'
-        elif (self.boardclass.board[self.matrix_coords[0]][
-                  self.matrix_coords[1]] == 3):
-            self.collided = 'wall'
-            self.notcollision = False
-            self.cur_frame = 2
-            return 'wall'
         return False
 
     def update(self, player_matrix_coords, was_move):
@@ -74,10 +68,10 @@ class Hunter(pygame.sprite.Sprite):
                 elif hy > py:  # двигаемся вниз
                     self.matrix_coords[0] -= 1
                 elif hx < px:  # двигемся налево
-                    self.cur_frame = 1
+                    self.cur_frame = 0
                     self.matrix_coords[1] += 1
                 elif hx > px:  # двигаемся направо
-                    self.cur_frame = 0
+                    self.cur_frame = 1
                     self.matrix_coords[1] -= 1
                 # подсчет координат охотника на экране
                 x = self.matrix_coords[1] * self.boardclass.cell_size \
