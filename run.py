@@ -3,8 +3,10 @@ from MyClasses.PlayerClass import *
 from MyClasses.WallClass import *
 from MyClasses.ExitClass import *
 from MyClasses.HunterClass import *
+from data_files.levels_colors import lcd
 from random import randint, choice
 from pprint import pprint
+import time
 
 SIZE = 1220, 750
 level = 1
@@ -23,31 +25,32 @@ def get_best_result(file):
         return text.readline()
 
 
-def change_color(r, g, b):
-        if board.cell_color[0] < r:
-            board.set_cell_color(screen, (board.cell_color[0] + 1,
-                                          board.cell_color[1],
-                                          board.cell_color[2]))
-        elif board.cell_color[0] > r:
-            board.set_cell_color(screen, (board.cell_color[0] - 1,
-                                          board.cell_color[1],
-                                          board.cell_color[2]))
-        if board.cell_color[1] < g:
-            board.set_cell_color(screen, (board.cell_color[0],
-                                          board.cell_color[1] + 1,
-                                          board.cell_color[2]))
-        elif board.cell_color[1] > g:
-            board.set_cell_color(screen, (board.cell_color[0],
-                                          board.cell_color[1] - 1,
-                                          board.cell_color[2]))
-        if board.cell_color[2] < b:
-            board.set_cell_color(screen, (board.cell_color[0],
-                                          board.cell_color[1],
-                                          board.cell_color[2] + 1))
-        elif board.cell_color[2] > b:
-            board.set_cell_color(screen, (board.cell_color[0],
-                                          board.cell_color[1],
-                                          board.cell_color[2] - 1))
+def change_color(rgb):
+    r, g, b = rgb[0], rgb[1], rgb[2]
+    if board.cell_color[0] < r:
+        board.set_cell_color(screen, (board.cell_color[0] + 1,
+                                      board.cell_color[1],
+                                      board.cell_color[2]))
+    elif board.cell_color[0] > r:
+        board.set_cell_color(screen, (board.cell_color[0] - 1,
+                                      board.cell_color[1],
+                                      board.cell_color[2]))
+    if board.cell_color[1] < g:
+        board.set_cell_color(screen, (board.cell_color[0],
+                                      board.cell_color[1] + 1,
+                                      board.cell_color[2]))
+    elif board.cell_color[1] > g:
+        board.set_cell_color(screen, (board.cell_color[0],
+                                      board.cell_color[1] - 1,
+                                      board.cell_color[2]))
+    if board.cell_color[2] < b:
+        board.set_cell_color(screen, (board.cell_color[0],
+                                      board.cell_color[1],
+                                      board.cell_color[2] + 1))
+    elif board.cell_color[2] > b:
+        board.set_cell_color(screen, (board.cell_color[0],
+                                      board.cell_color[1],
+                                      board.cell_color[2] - 1))
 
 
 def start_new_level(level):
@@ -78,14 +81,7 @@ def start_new_level(level):
     board.sprite_group.add(exit)
     wall = Wall(9, 9, 10, 10, board)
     board.wall_sprite_group.add(wall)
-    for _ in range(level):
-        x = randint(0, 23)
-        y = randint(0, 13)
-        while board.board[y][x] != 0:
-            x = randint(0, 23)
-            y = randint(0, 13)
-        hunter = Hunter(9, 9, x, y, board)
-        board.hunter_sprite_group.add(hunter)
+    for i in range(level):
         x = randint(0, 23)
         y = randint(0, 13)
         while board.board[y][x] != 0:
@@ -93,6 +89,15 @@ def start_new_level(level):
             y = randint(0, 13)
         wall = Wall(9, 9, x, y, board)
         board.wall_sprite_group.add(wall)
+        if i % 2 == 0:
+            x = randint(0, 23)
+            y = randint(0, 13)
+            while board.board[y][x] != 0:
+                x = randint(0, 23)
+                y = randint(0, 13)
+            hunter = Hunter(9, 9, x, y, board)
+            board.hunter_sprite_group.add(hunter)
+        board.render(screen)  # первая отрисовка поля
     clock = pygame.time.Clock()
     board.render(screen)  # первая отрисовка поля
 
@@ -103,112 +108,9 @@ if __name__ == '__main__':
     was_move = False
 
     while running:
-        if level == 1:
-            change_color(93, 161, 48)
-            cell_color = (93, 161, 48)
-        elif level == 2:
-            change_color(158, 178, 93)
-            cell_color = (158, 178, 93)
-        elif level == 3:
-            change_color(187, 10, 33)
-            cell_color = (187, 10, 33)
-        elif level == 4:
-            change_color(237, 255, 113)
-            cell_color = (237, 255, 113)
-        elif level == 5:
-            change_color(241, 219, 75)
-            cell_color = (241, 219, 75)
-        elif level == 6:
-            change_color(75, 136, 162)
-            cell_color = (75, 136, 162)
-        elif level == 7:
-            change_color(167, 198, 218)
-            cell_color = (167, 198, 218)
-        elif level == 8:
-            change_color(241, 153, 83)
-            cell_color = (241, 153, 83)
-        elif level == 9:
-            change_color(86, 53, 30)
-            cell_color = (86, 53, 30)
-        elif level == 10:
-            change_color(196, 115, 53)
-            cell_color = (196, 115, 53)
-        elif level == 11:
-            change_color(38, 96, 164)
-            cell_color = (38, 96, 164)
-        elif level == 12:
-            change_color(171, 155, 150)
-            cell_color = (171, 155, 150)
-        elif level == 13:
-            change_color(196, 110, 110)
-            cell_color = (196, 110, 110)
-        elif level == 14:
-            change_color(166, 58, 80)
-            cell_color = (166, 58, 80)
-        elif level == 15:
-            change_color(37, 38, 39)
-            cell_color = (37, 38, 39)
-        elif level == 16:
-            change_color(159, 184, 173)
-            cell_color = (159, 184, 173)
-        elif level == 17:
-            change_color(71, 88, 65)
-            cell_color = (71, 88, 65)
-        elif level == 18:
-            change_color(63, 64, 63)
-            cell_color = (63, 64, 63)
-        elif level == 19:
-            change_color(107, 43, 6)
-            cell_color = (107, 43, 6)
-        elif level == 20:
-            change_color(0, 53, 84)
-            cell_color = (0, 53, 84)
-        elif level == 21:
-            change_color(0, 100, 148)
-            cell_color = (0, 100, 148)
-        elif level == 22:
-            change_color(5, 130, 202)
-            cell_color = (5, 130, 202)
-        elif level == 23:
-            change_color(0, 166, 251)
-            cell_color = (0, 166, 251)
-        elif level == 24:
-            change_color(133, 189, 166)
-            cell_color = (133, 189, 166)
-        elif level == 25:
-            change_color(62, 136, 91)
-            cell_color = (62, 136, 91)
-        elif level == 26:
-            change_color(117, 184, 200)
-            cell_color = (117, 184, 200)
-        elif level == 27:
-            change_color(80, 108, 100)
-            cell_color = (80, 108, 100)
-        elif level == 28:
-            change_color(119, 203, 185)
-            cell_color = (119, 203, 185)
-        elif level == 29:
-            change_color(52, 35, 106)
-            cell_color = (52, 35, 106)
-        elif level == 30:
-            change_color(46, 23, 96)
-            cell_color = (46, 23, 96)
-        elif level == 31:
-            change_color(113, 128, 185)
-            cell_color = (113, 128, 185)
-        elif level == 32:
-            change_color(207, 77, 111)
-            cell_color = (207, 77, 111)
-        elif level == 33:
-            change_color(163, 109, 144)
-            cell_color = (163, 109, 144)
-        elif level == 34:
-            change_color(50, 50, 50)
-            cell_color = (50, 50, 50)
-        elif level == 35:
-            change_color(98, 131, 149)
-            cell_color = (98, 131, 149)
-
+        # переходы между цветами
+        change_color(lcd[level])
+        cell_color = lcd[level]
         for hs in board.hunter_sprite_group:
             hs.update(player.matrix_coords, False)
             if hs.cur_frame == 81 and hs.collided == 'player':
