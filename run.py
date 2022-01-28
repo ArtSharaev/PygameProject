@@ -157,6 +157,57 @@ if __name__ == '__main__':
         elif level == 18:
             change_color(63, 64, 63)
             cell_color = (63, 64, 63)
+        elif level == 19:
+            change_color(107, 43, 6)
+            cell_color = (107, 43, 6)
+        elif level == 20:
+            change_color(0, 53, 84)
+            cell_color = (0, 53, 84)
+        elif level == 21:
+            change_color(0, 100, 148)
+            cell_color = (0, 100, 148)
+        elif level == 22:
+            change_color(5, 130, 202)
+            cell_color = (5, 130, 202)
+        elif level == 23:
+            change_color(0, 166, 251)
+            cell_color = (0, 166, 251)
+        elif level == 24:
+            change_color(133, 189, 166)
+            cell_color = (133, 189, 166)
+        elif level == 25:
+            change_color(62, 136, 91)
+            cell_color = (62, 136, 91)
+        elif level == 26:
+            change_color(117, 184, 200)
+            cell_color = (117, 184, 200)
+        elif level == 27:
+            change_color(80, 108, 100)
+            cell_color = (80, 108, 100)
+        elif level == 28:
+            change_color(119, 203, 185)
+            cell_color = (119, 203, 185)
+        elif level == 29:
+            change_color(52, 35, 106)
+            cell_color = (52, 35, 106)
+        elif level == 30:
+            change_color(46, 23, 96)
+            cell_color = (46, 23, 96)
+        elif level == 31:
+            change_color(113, 128, 185)
+            cell_color = (113, 128, 185)
+        elif level == 32:
+            change_color(207, 77, 111)
+            cell_color = (207, 77, 111)
+        elif level == 33:
+            change_color(163, 109, 144)
+            cell_color = (163, 109, 144)
+        elif level == 34:
+            change_color(50, 50, 50)
+            cell_color = (50, 50, 50)
+        elif level == 35:
+            change_color(98, 131, 149)
+            cell_color = (98, 131, 149)
 
         for hs in board.hunter_sprite_group:
             hs.update(player.matrix_coords, False)
