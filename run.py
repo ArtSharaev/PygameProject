@@ -69,6 +69,13 @@ def start_new_level(level):
     board = Board(24, 14, cell_color=cell_color, cell_size=50)
     player = Player(0, 0, board)
     board.sprite_group.add(player)
+    x = randint(10, 23)
+    y = randint(0, 13)
+    while board.board[y][x] != 0:
+        x = randint(10, 23)
+        y = randint(0, 13)
+    exit = Exit(x, y, board)
+    board.sprite_group.add(exit)
     wall = Wall(9, 9, 10, 10, board)
     board.wall_sprite_group.add(wall)
     for _ in range(level):
@@ -79,13 +86,13 @@ def start_new_level(level):
             y = randint(0, 13)
         hunter = Hunter(9, 9, x, y, board)
         board.hunter_sprite_group.add(hunter)
-    x = randint(10, 23)
-    y = randint(0, 13)
-    while board.board[y][x] != 0:
-        x = randint(10, 23)
+        x = randint(0, 23)
         y = randint(0, 13)
-    exit = Exit(x, y, board)
-    board.sprite_group.add(exit)
+        while board.board[y][x] != 0:
+            x = randint(0, 23)
+            y = randint(0, 13)
+        wall = Wall(9, 9, x, y, board)
+        board.wall_sprite_group.add(wall)
     clock = pygame.time.Clock()
     board.render(screen)  # первая отрисовка поля
 
@@ -141,14 +148,27 @@ if __name__ == '__main__':
         elif level == 15:
             change_color(37, 38, 39)
             cell_color = (37, 38, 39)
+        elif level == 16:
+            change_color(159, 184, 173)
+            cell_color = (159, 184, 173)
+        elif level == 17:
+            change_color(71, 88, 65)
+            cell_color = (71, 88, 65)
+        elif level == 18:
+            change_color(63, 64, 63)
+            cell_color = (63, 64, 63)
+
         for hs in board.hunter_sprite_group:
             hs.update(player.matrix_coords, False)
             if hs.cur_frame == 81 and hs.collided == 'player':
                 start_new_level(level)
         for ws in board.wall_sprite_group:
-            ws.update()
-            if ws.cur_frame == 80 and ws.collided == 'player':
-                start_new_level(level)
+            if ws.collided == 'player':
+                ws.update()
+                if ws.cur_frame == 80:
+                    start_new_level(level)
+            if ws.collided == 'hunter':
+                ws.update()
         if not crash_waiting:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -197,8 +217,8 @@ if __name__ == '__main__':
                             elif wallsprite.check_collision() == 'hunter':
                                 for hs in board.hunter_sprite_group:
                                     if hs.matrix_coords == wallsprite.matrix_coords:
+                                        board.board[wallsprite.matrix_coords[0]][wallsprite.matrix_coords[1]] = 3
                                         hs.kill()
-                                        break
                         # каждый второй ход с вероятностью 75%
                         # появляется новая стена
                         # в случайной не занятой клетке
@@ -221,7 +241,7 @@ if __name__ == '__main__':
                                 y = randint(0, 13)
                             hunter = Hunter(9, 9, x, y, board)
                             board.hunter_sprite_group.add(hunter)
-                        pprint(board.board)
+                        # pprint(board.board)
                         was_move = False
         clock.tick(FPS)
         board.render(screen)  # новая отрисовка поля
