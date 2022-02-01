@@ -6,7 +6,6 @@ from MyClasses.HunterClass import *
 from data_files.levels_colors import lcd
 from random import randint, choice
 from pprint import pprint
-import time
 
 SIZE = 1220, 750
 level = 1
